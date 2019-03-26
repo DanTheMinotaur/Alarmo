@@ -2,7 +2,15 @@ import RPi.GPIO as GPIO
 
 
 class InputSensor:
+    """
+    Class for creating input sensor objects
+    """
     def __init__(self, pin, sensor_type="Input", basic_return=True):
+        """
+        :param pin: The pin number for the input device
+        :param sensor_type: The name of the sensor being created
+        :param basic_return: Return Type of data being read
+        """
         try:
             self.pin = int(pin)
             self.sensor_type = str(sensor_type)
@@ -13,6 +21,10 @@ class InputSensor:
             print("Invalid Setup Type")
 
     def read(self):
+        """
+        Reads data from input sensor
+        :return: Returns boolean value if basic_return is set to True, or a dictionary with object information.
+        """
         sensor_value = GPIO.input(self.pin)
         if self.basic_return:
             return bool(sensor_value)
