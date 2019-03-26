@@ -7,6 +7,10 @@
     {
       "type": "Tap",
       "pin": 21
+    },
+    {
+      "type": "Weather",
+      "pin": 26
     }
   ],
   "tests": {

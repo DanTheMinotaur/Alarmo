@@ -1,4 +1,4 @@
-from app.sensors import InputSensor
+from app.sensors import InputSensor, WeatherHumiditySensor
 from time import sleep
 import json
 
@@ -18,13 +18,23 @@ with open("config/sensors.json") as json_file:
 
     if "sensors" in sensor_config and isinstance(sensor_config["sensors"], list):
         for sensor in sensor_config["sensors"]:
-            sensors.append(
-                InputSensor(sensor["pin"], sensor["type"], False)
-            )
+            if sensor["type"] == "Weather":
+                sensors.append(
+                    WeatherHumiditySensor(sensor["pin"])
+                )
+            else:
+                sensors.append(
+                    InputSensor(sensor["pin"], sensor["type"], False)
+                )
 
 while True:
     for sensor in sensors:
         sensor_data = sensor.read()
+
+        if isinstance(sensor_data["value"], dict):
+            print(sensor_data["value"])
+            break
+        
         if sensor_data["value"]:
             print("{} Detected".format(sensor_data["sensor_type"]))
         else:

@@ -1,4 +1,27 @@
 import RPi.GPIO as GPIO
+import Adafruit_DHT
+
+
+class WeatherHumiditySensor:
+    DHT_TYPE = Adafruit_DHT.DHT11
+
+    def __init__(self, pin):
+        self.pin = pin
+
+    def read(self):
+        while True:
+            humidity, temperature = Adafruit_DHT.read_retry(self.DHT_TYPE, self.pin)
+            if humidity is not None and temperature is not None:
+                return {
+                    "value": {
+                        "humidity": humidity,
+                        "temperature": temperature
+                    },
+                    "sensor_type": "Weather and Humidity",
+                    "pin": self.pin
+                }
+            else:
+                continue
 
 
 class InputSensor:
