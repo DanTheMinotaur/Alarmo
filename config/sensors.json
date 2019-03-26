@@ -1,0 +1,15 @@
+{
+  "sensors": [
+    {
+      "type": "Motion",
+      "pin": 20
+    },
+    {
+      "type": "Tap",
+      "pin": 21
+    }
+  ],
+  "tests": {
+    "loop_time": 0.1
+  }
+}
