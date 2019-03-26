@@ -2,7 +2,7 @@
   "times": [
     {
       "alarm_time": "8:00am",
-      "sleep": "10m"
+      "snooze": "10m"
     }
   ]
 }
