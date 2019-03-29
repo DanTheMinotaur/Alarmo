@@ -7,6 +7,10 @@
   ],
   "sensors": [
     {
+      "type": "button",
+      "pin": 16
+    },
+    {
       "type": "motion",
       "pin": 20
     },
