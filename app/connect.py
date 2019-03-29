@@ -48,9 +48,6 @@ class AWSClient:
         :param topic: The desited MTQQ topic for data to be posted to
         :return: None
         """
-        data = {
-            "data": data
-        }
 
         if data:
             data["device_time"] = str(datetime.now())

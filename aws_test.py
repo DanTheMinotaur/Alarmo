@@ -4,7 +4,7 @@ import random
 
 
 def generate_random_data():
-    return [
+    object_list = [
         {
             "sensor_type": "Motion",
             "value": bool(random.getrandbits(1)),
@@ -24,13 +24,14 @@ def generate_random_data():
             "pin": random.randint(1, 26)
         }
     ]
+    return object_list[random.randint(0, len(object_list) - 1)]
 
 client = AWSClient(
-    client_id="RaspPISender",
-    host="a17mh16tz1p39u-ats.iot.eu-west-1.amazonaws.com",
-    root_ca_path="./certs/root-CA.crt",
-    thing_cert_path="./certs/PIThingCA.cert.pem",
-    private_key_path="./certs/PIThingCA.private.key"
+    client_id="basicPubSub",
+    host="a3p8hueujw0tur-ats.iot.eu-west-1.amazonaws.com",
+    root_ca_path="./certs/AmazonRootCA1.crt",
+    thing_cert_path="./certs/Alarmo.cert.pem",
+    private_key_path="./certs/Alarmo.private.key"
 )
 client.connect()
 
@@ -39,6 +40,6 @@ sleep_time = 10
 while True:
     sample_data = generate_random_data()
     print("Random data to send: " + str(sample_data))
-    client.send(sample_data, "alarm/test")
+    client.send(sample_data, "sdk/test/Python")
     print("Sleeping for {} seconds".format(sleep_time))
     sleep(sleep_time)
