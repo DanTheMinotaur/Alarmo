@@ -4,6 +4,7 @@ from datetime import datetime
 from time import sleep
 import logging
 
+
 class AWSClient:
     """
     Class is used to connect to AWS IoT service and provides methods for sending and recieving data from AWS IoT
@@ -47,6 +48,9 @@ class AWSClient:
         :param topic: The desited MTQQ topic for data to be posted to
         :return: None
         """
+        data = {
+            "data": data
+        }
 
         if data:
             data["device_time"] = str(datetime.now())
