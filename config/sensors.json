@@ -1,16 +1,20 @@
 {
   "sensors": [
     {
-      "type": "Motion",
+      "type": "motion",
       "pin": 20
     },
     {
-      "type": "Tap",
+      "type": "tap",
       "pin": 21
     },
     {
-      "type": "Weather",
+      "type": "dht",
       "pin": 26
+    },
+    {
+      "type": "sound",
+      "pin": 23
     }
   ],
   "tests": {
