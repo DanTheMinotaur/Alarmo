@@ -1,1 +1,2 @@
 AWSIoTPythonSDK==1.4.4
+RPi.GPIO==0.6.5
