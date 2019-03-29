@@ -1,6 +1,7 @@
 import RPi.GPIO as GPIO
 import Adafruit_DHT
 
+
 class Sensor:
     def __init__(self, pin, sensor_type="Input", basic_return=True):
         self.pin = pin
@@ -20,6 +21,19 @@ class Sensor:
                 "value": self.value,
                 "pin": self.pin
             }
+
+
+class Outputter:
+    def __init__(self, pin):
+        self.pin = pin
+        GPIO.setmode(GPIO.BCM)
+        GPIO.setup(self.pin, GPIO.OUT)
+
+    def on(self):
+        GPIO.output(self.pin, GPIO.HIGH)
+
+    def off(self):
+        GPIO.output(self.pin, GPIO.LOW)
 
 
 class TemperatureHumiditySensor(Sensor):
