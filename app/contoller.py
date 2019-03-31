@@ -2,6 +2,7 @@ from app.sensors import TemperatureHumiditySensor, InputSensor
 from app.alarm import Alarm
 import json
 from threading import Thread, ThreadError
+from time import sleep
 
 
 class AlarmoController:
@@ -22,6 +23,10 @@ class AlarmoController:
         alarm_display_thread = Thread(target=self.alarm.display)
         alarm_display_thread.setDaemon(True)
         alarm_display_thread.start()
+
+        sensor_data_thread = Thread(target=self.publish_sensor_readings)
+        sensor_data_thread.setDaemon(True)
+        sensor_data_thread.start()
 
         while True:
             pass
@@ -50,6 +55,22 @@ class AlarmoController:
                 self.alarm_times.append(alarm["alarm_time"])
         else:
             raise KeyError("Error in alarm_times.json configuration, no 'times' key")
+
+    def publish_sensor_readings(self, wait_time=1):
+        """
+        Sends sensor readings to AWS
+        :param wait_time: time to wait before reading sensors again.
+        :return:
+        """
+        while True:
+            print(self.__read_sensors())
+            sleep(wait_time)
+
+    def __read_sensors(self):
+        sensor_data = {}
+        for sensor in self.active_sensors:
+            sensor_data[sensor.sensor_type] = sensor.read()
+        return sensor_data
 
     @staticmethod
     def __validate_config(config, config_type):
