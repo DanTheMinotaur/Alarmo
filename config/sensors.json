@@ -1,8 +1,11 @@
 {
+  "screen": {
+
+  },
   "outputters": [
     {
       "type": "buzzer",
-      "pin": 15
+      "pin": 10
     }
   ],
   "sensors": [
@@ -12,26 +15,26 @@
     },
     {
       "type": "motion",
-      "pin": 20
-    },
-    {
-      "type": "tap",
-      "pin": 21
-    },
-    {
-      "type": "dht",
-      "pin": 26
-    },
-    {
-      "type": "sound",
       "pin": 11
     },
     {
-      "type": "light",
+      "type": "tap",
+      "pin": 17
+    },
+    {
+      "type": "dht",
+      "pin": 27
+    },
+    {
+      "type": "sound",
       "pin": 20
+    },
+    {
+      "type": "light",
+      "pin": 9
     }
   ],
   "tests": {
-    "loop_time": 0.1
+    "loop_time": 1
   }
 }

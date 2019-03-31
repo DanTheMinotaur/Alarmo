@@ -60,7 +60,7 @@ class InputSensor(Sensor):
     """
     Class for creating input sensor objects
     """
-    def __init__(self, pin, sensor_type):
+    def __init__(self, pin, sensor_type="Input"):
         super(InputSensor, self).__init__(pin, sensor_type)
         """
         :param pin: The pin number for the input device
