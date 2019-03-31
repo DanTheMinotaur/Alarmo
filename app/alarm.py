@@ -6,17 +6,22 @@ from datetime import datetime
 
 
 class Alarm:
-    def __init__(self, alarm_times="18:41:20", last_message=""):
+    def __init__(self, alarm_times=None, last_message=""):
         self.screen = self.__setup_screen()
         self.screen.clear()
         self.__message = last_message
-        self.alarm_times = list(alarm_times)
+        self.alarm_times = sorted(list(alarm_times), reverse=True)
 
     def set_message(self, message):
         self.screen.clear()
         self.__message = message
 
     def display(self):
+        """
+        Displays the current time and message set.
+        :return:
+        """
+        self.set_message("Alarm @ {}".format(self.alarm_times[0]))
         while True:
             current_time = datetime.now().strftime("%b-%d %H:%M:%S")
 

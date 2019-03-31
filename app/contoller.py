@@ -1,6 +1,7 @@
 from app.sensors import TemperatureHumiditySensor, InputSensor
 from app.alarm import Alarm
 import json
+from threading import Thread, ThreadError
 
 
 class AlarmoController:
@@ -12,6 +13,18 @@ class AlarmoController:
         self.alarm_times = list()
         self.__load_configurations()
         self.alarm = Alarm(self.alarm_times)
+
+    def run(self):
+        """
+        Run alarmo
+        :return: None
+        """
+        alarm_display_thread = Thread(target=self.alarm.display)
+        alarm_display_thread.setDaemon(True)
+        alarm_display_thread.start()
+
+        while True:
+            pass
 
     def __load_configurations(self):
         """
@@ -32,7 +45,9 @@ class AlarmoController:
             alarm_config = json.load(alarm_times_json)
 
         if self.__validate_config(alarm_config, "times"):
-            self.alarm_times = alarm_config["times"]
+            alarm_list = alarm_config["times"]
+            for alarm in alarm_list:
+                self.alarm_times.append(alarm["alarm_time"])
         else:
             raise KeyError("Error in alarm_times.json configuration, no 'times' key")
 
