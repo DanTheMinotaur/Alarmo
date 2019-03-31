@@ -20,7 +20,7 @@ lcd.color = [0, 100, 0]
 
 # https://learn.adafruit.com/character-lcds/python-circuitpython
 while True:
-    lcd.message = "Hello\n{}".format(datetime.now().strftime("%b-%d %H:%M:%S"))
+    lcd.message = "Alarm @ 8:00am\n{}".format(datetime.now().strftime("%b-%d %H:%M:%S"))
     time.sleep(1)
 #
 # rs = 17
