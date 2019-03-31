@@ -1,7 +1,11 @@
 {
   "times": [
     {
-      "alarm_time": "8:00am",
+      "alarm_time": "8:00",
+      "snooze": "10m"
+    },
+    {
+      "alarm_time": "16:00",
       "snooze": "10m"
     }
   ]

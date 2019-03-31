@@ -2,6 +2,6 @@ from app.alarm import Alarm
 
 alarm = Alarm()
 
-alarm.message = "HelloWorld"
+alarm.__message = "HelloWorld"
 
 alarm.display()
