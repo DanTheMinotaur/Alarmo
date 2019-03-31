@@ -1,5 +1,7 @@
 from app.sensors import TemperatureHumiditySensor, InputSensor
+from app.alarm import Alarm
 import json
+
 
 class AlarmoController:
     """
@@ -9,6 +11,7 @@ class AlarmoController:
         self.active_sensors = list()
         self.alarm_times = list()
         self.__load_configurations()
+        self.alarm = Alarm(self.alarm_times)
 
     def __load_configurations(self):
         """
@@ -35,10 +38,21 @@ class AlarmoController:
 
     @staticmethod
     def __validate_config(config, config_type):
+        """
+        Validates a config file
+        :param config: configuration dictionary
+        :param config_type: config key
+        :return: Boolean for valid config
+        """
         return config_type in config and isinstance(config[config_type], list)
 
     @staticmethod
     def __create_sensor(sensor):
+        """
+        Creates sensor objects
+        :param sensor: dictionary of sensor details
+        :return: Sensor object
+        """
         if sensor["type"] == "dht":
             sensor_object = TemperatureHumiditySensor(sensor["pin"])
             sensor_object.basic_return = False
