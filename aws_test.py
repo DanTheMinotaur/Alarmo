@@ -1,19 +1,21 @@
 from app.connect import AWSClient
 from time import sleep
 import random
-
+import time
 
 def generate_random_data():
     object_list = [
         {
             "sensor_type": "Motion",
             "value": bool(random.getrandbits(1)),
-            "pin": random.randint(1, 26)
+            "pin": random.randint(1, 26),
+            "time": time.time()
         },
         {
             "sensor_type": "Light",
             "value": bool(random.getrandbits(1)),
-            "pin": random.randint(1, 26)
+            "pin": random.randint(1, 26),
+            "time": time.time()
         },
         {
             "sensor_type": "Weather",
@@ -21,7 +23,8 @@ def generate_random_data():
                 "Temperature": round(random.uniform(1.5, 40.0), 2),
                 "Humidity": round(random.uniform(1.5, 40.0), 2)
             },
-            "pin": random.randint(1, 26)
+            "pin": random.randint(1, 26),
+            "time": time.time()
         }
     ]
     return object_list[random.randint(0, len(object_list) - 1)]

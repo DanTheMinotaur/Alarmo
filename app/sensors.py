@@ -1,5 +1,6 @@
 import RPi.GPIO as GPIO
 import Adafruit_DHT
+import time
 
 
 class Sensor:
@@ -19,7 +20,8 @@ class Sensor:
             return {
                 "sensor_type": self.sensor_type,
                 "value": self.value,
-                "pin": self.pin
+                "pin": self.pin,
+                "time": time.time()
             }
 
 
