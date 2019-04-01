@@ -27,7 +27,7 @@ def generate_random_data():
     return object_list[random.randint(0, len(object_list) - 1)]
 
 client = AWSClient(
-    client_id="basicPubSub",
+    client_id="alarmo",
     host="a3p8hueujw0tur-ats.iot.eu-west-1.amazonaws.com",
     root_ca_path="./certs/AmazonRootCA1.crt",
     thing_cert_path="./certs/Alarmo.cert.pem",

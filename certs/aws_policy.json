@@ -1,0 +1,39 @@
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Action": [
+        "iot:Publish",
+        "iot:Receive"
+      ],
+      "Resource": [
+        "arn:aws:iot:eu-west-1:963636625780:topic/sdk/test/java",
+        "arn:aws:iot:eu-west-1:963636625780:topic/sdk/test/Python",
+        "arn:aws:iot:eu-west-1:963636625780:topic/Sensor/Data",
+        "arn:aws:iot:eu-west-1:963636625780:topic/Alarm/Command"
+      ]
+    },
+    {
+      "Effect": "Allow",
+      "Action": [
+        "iot:Subscribe"
+      ],
+      "Resource": [
+        *
+      ]
+    },
+    {
+      "Effect": "Allow",
+      "Action": [
+        "iot:Connect"
+      ],
+      "Resource": [
+        "arn:aws:iot:eu-west-1:963636625780:client/sdk-java",
+        "arn:aws:iot:eu-west-1:963636625780:client/basicPubSub",
+        "arn:aws:iot:eu-west-1:963636625780:client/sdk-nodejs-*"
+        "arn:aws:iot:eu-west-1:963636625780:client/alarmo"
+      ]
+    }
+  ]
+}
