@@ -8,13 +8,13 @@ def generate_random_data():
         {
             "sensor_type": "Motion",
             "value": bool(random.getrandbits(1)),
-            "pin": random.randint(1, 26),
+            #"pin": random.randint(1, 26),
             "time": time.time()
         },
         {
             "sensor_type": "Light",
             "value": bool(random.getrandbits(1)),
-            "pin": random.randint(1, 26),
+            #"pin": random.randint(1, 26),
             "time": time.time()
         },
         {
@@ -23,7 +23,7 @@ def generate_random_data():
                 "Temperature": round(random.uniform(1.5, 40.0), 2),
                 "Humidity": round(random.uniform(1.5, 40.0), 2)
             },
-            "pin": random.randint(1, 26),
+            #"pin": random.randint(1, 26),
             "time": time.time()
         }
     ]

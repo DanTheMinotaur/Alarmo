@@ -50,7 +50,7 @@ class AWSClient:
         """
 
         if data:
-            data["device_time"] = str(datetime.now())
+            # data["device_time"] = str(datetime.now())
 
             json_message = json.dumps(data)
             self.aws_client.publish(topic, json_message, 1)
