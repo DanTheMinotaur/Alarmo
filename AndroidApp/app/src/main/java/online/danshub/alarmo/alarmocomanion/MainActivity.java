@@ -18,7 +18,7 @@ import android.widget.LinearLayout;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AWSActivity {
 
     private TimePickerDialog timePickerDialog;
     private final String LOGTAG = "MainMenu";
