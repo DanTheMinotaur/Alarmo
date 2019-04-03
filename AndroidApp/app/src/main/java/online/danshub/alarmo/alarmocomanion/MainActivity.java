@@ -1,6 +1,8 @@
 package online.danshub.alarmo.alarmocomanion;
 
+import android.app.AlertDialog;
 import android.app.TimePickerDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -11,12 +13,15 @@ import android.util.Log;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.TimePicker;
+import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
 
     private TimePickerDialog timePickerDialog;
-    private String LOGTAG = "MainMenu";
+    private final String LOGTAG = "MainMenu";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -40,10 +45,40 @@ public class MainActivity extends AppCompatActivity {
 
     private void createButtons() {
         FloatingActionButton alarmChooserButton = findViewById(R.id.alarmCreateButton);
+        FloatingActionButton sendMessageButton = findViewById(R.id.sendMessageButton);
         alarmChooserButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 timePickerDialog.show();
+            }
+        });
+        sendMessageButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+                builder.setTitle("Send a Message to Alarmo");
+                final EditText messageInput = new EditText(MainActivity.this);
+                LinearLayout.LayoutParams l = new LinearLayout.LayoutParams(
+                        LinearLayout.LayoutParams.MATCH_PARENT,
+                        LinearLayout.LayoutParams.MATCH_PARENT
+                );
+                messageInput.setLayoutParams(l);
+                builder.setView(messageInput);
+                builder.setPositiveButton("SEND", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        String inputText = messageInput.getText().toString();
+                        Log.v(LOGTAG, inputText);
+                        Toast.makeText(getApplicationContext(), "Message Sent: " + inputText, Toast.LENGTH_LONG).show();
+                    }
+                });
+                builder.setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                    }
+                });
+                builder.show();
             }
         });
     }
