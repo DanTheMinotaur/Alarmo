@@ -13,10 +13,17 @@ import android.util.Log;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TimePicker;
 import android.widget.Toast;
+
+import com.amazonaws.mobile.client.AWSMobileClient;
+import com.amazonaws.mobile.client.Callback;
+import com.amazonaws.mobile.client.UserStateDetails;
+
+import java.util.UUID;
 
 public class MainActivity extends AWSActivity {
 
@@ -79,6 +86,15 @@ public class MainActivity extends AWSActivity {
                     }
                 });
                 builder.show();
+            }
+        });
+
+        Button testButton = findViewById(R.id.testButton);
+
+        testButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                connectAWS();
             }
         });
     }

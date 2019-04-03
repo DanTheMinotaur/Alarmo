@@ -24,6 +24,7 @@ import org.json.JSONObject;
 
 import java.io.UnsupportedEncodingException;
 import java.security.KeyStore;
+import java.util.UUID;
 
 public abstract class AWSActivity extends AppCompatActivity {
     static final String LOG_TAG = MainActivity.class.getCanonicalName();
@@ -54,6 +55,23 @@ public abstract class AWSActivity extends AppCompatActivity {
     String keystorePassword;
     KeyStore clientKeyStore = null;
     String certificateId;
+
+    public void connectAWS() {
+        clientId = UUID.randomUUID().toString();
+
+        AWSMobileClient.getInstance().initialize(this, new Callback<UserStateDetails>() {
+            @Override
+            public void onResult(UserStateDetails result) {
+                initIoTClient();
+            }
+
+            @Override
+            public void onError(Exception e) {
+                Log.e(LOG_TAG, "onError: ", e);
+            }
+        });
+
+    }
 
 
     public void publish(JSONObject data, String topic) {
