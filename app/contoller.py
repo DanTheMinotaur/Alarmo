@@ -13,14 +13,14 @@ class AlarmoController:
         self.active_sensors = list()
         self.alarm_times = list()
         self.__load_configurations()
-        self.alarm = Alarm(self.alarm_times)
+        self.__alarm = Alarm(self.alarm_times)
 
     def run(self):
         """
         Run alarmo
         :return: None
         """
-        alarm_display_thread = Thread(target=self.alarm.display)
+        alarm_display_thread = Thread(target=self.__alarm.display)
         alarm_display_thread.setDaemon(True)
         alarm_display_thread.start()
 
@@ -30,6 +30,9 @@ class AlarmoController:
 
         while True:
             pass
+
+    def override_alarm_message(self, message):
+        self.__alarm.set_message(message)
 
     def __load_configurations(self):
         """

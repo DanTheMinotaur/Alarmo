@@ -23,25 +23,24 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.UnsupportedEncodingException;
+import java.nio.charset.StandardCharsets;
 import java.security.KeyStore;
 import java.util.UUID;
 
 public abstract class AWSActivity extends AppCompatActivity {
-    static final String LOG_TAG = MainActivity.class.getCanonicalName();
-
-    static final String commandTopic = "Android/Command";
+    static final String LOG_TAG = AWSActivity.class.getCanonicalName();
     static final String dataTopic = "PI/Data";
 
     // IoT endpoint
     // AWS Iot CLI describe-endpoint call returns: XXXXXXXXXX.iot.<region>.amazonaws.com
-    private static final String CUSTOMER_SPECIFIC_ENDPOINT = "a17mh16tz1p39u-ats.iot.eu-west-1.amazonaws.com";
+    private static final String CUSTOMER_SPECIFIC_ENDPOINT = "a3p8hueujw0tur-ats.iot.eu-west-1.amazonaws.com";
     // Name of the AWS IoT policy to attach to a newly created certificate
-    private static final String AWS_IOT_POLICY_NAME = "IOTAndroidPolicyFinal";
+    private static final String AWS_IOT_POLICY_NAME = "AlarmoAndroidPolicy";
 
     // Region of AWS IoT
     private static final Regions MY_REGION = Regions.EU_WEST_1;
     // Filename of KeyStore file on the filesystem
-    private static final String KEYSTORE_NAME = "iot_ca1_keystore";
+    private static final String KEYSTORE_NAME = "alarmo_keystore";
     // Password for the private key in the KeyStore
     private static final String KEYSTORE_PASSWORD = "Hello123";
     // Certificate and key aliases in the KeyStore
@@ -70,8 +69,8 @@ public abstract class AWSActivity extends AppCompatActivity {
                 Log.e(LOG_TAG, "onError: ", e);
             }
         });
-
     }
+
 
 
     public void publish(JSONObject data, String topic) {
@@ -96,7 +95,7 @@ public abstract class AWSActivity extends AppCompatActivity {
                                 @Override
                                 public void run() {
                                     try {
-                                        String message = new String(data, "UTF-8");
+                                        String message = new String(data, StandardCharsets.UTF_8.toString());
                                         Log.d(LOG_TAG, "Message arrived:");
                                         Log.d(LOG_TAG, "Topic: " + topic);
                                         Log.d(LOG_TAG, "Message: " + message);

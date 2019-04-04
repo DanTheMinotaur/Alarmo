@@ -3,6 +3,7 @@ package online.danshub.alarmo.alarmocomanion;
 import android.app.AlertDialog;
 import android.app.TimePickerDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -13,9 +14,13 @@ import android.util.Log;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.ListAdapter;
+import android.widget.ListView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
@@ -23,12 +28,17 @@ import com.amazonaws.mobile.client.AWSMobileClient;
 import com.amazonaws.mobile.client.Callback;
 import com.amazonaws.mobile.client.UserStateDetails;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 public class MainActivity extends AWSActivity {
 
+    public List<String> staticListAlarms = new ArrayList<>();
+    private ListView alarmTimesList;
+
     private TimePickerDialog timePickerDialog;
-    private final String LOGTAG = "MainMenu";
+    private final String LOGTAG = MainActivity.class.getCanonicalName();;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -38,6 +48,33 @@ public class MainActivity extends AWSActivity {
 
         createDialogs();
         createButtons();
+
+        staticListAlarms.add("11:00");
+        staticListAlarms.add("21:00");
+        staticListAlarms.add("22:00");
+
+        alarmTimesList = findViewById(R.id.alarmTimesList);
+
+        final ArrayAdapter arrayAdapter = new ArrayAdapter(MainActivity.this, android.R.layout.select_dialog_singlechoice, staticListAlarms);
+
+        alarmTimesList.setAdapter(arrayAdapter);
+
+        alarmTimesList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+                builder.setTitle("Do you want to remove this alarm?");
+                builder.setPositiveButton("YES", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        Log.v(LOGTAG, "Clicked Alarm Time");
+                        staticListAlarms.remove(position);
+                        arrayAdapter.notifyDataSetChanged();
+                    }
+                });
+                builder.show();
+            }
+        });
 
     }
 
@@ -97,13 +134,6 @@ public class MainActivity extends AWSActivity {
                 connectAWS();
             }
         });
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        return true;
     }
 
     @Override

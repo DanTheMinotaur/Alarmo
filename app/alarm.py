@@ -23,7 +23,7 @@ class Alarm:
         """
         self.set_message("Alarm @ {}".format(self.alarm_times[0]))
         while True:
-            current_time = datetime.now().strftime("%b-%d %H:%M:%S")
+            current_time = datetime.now().strftime("%b-%d %H:%M")
 
             for time in self.alarm_times:
                 if time in current_time:

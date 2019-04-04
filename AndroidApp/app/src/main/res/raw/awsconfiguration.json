@@ -6,7 +6,7 @@
   "CredentialsProvider": {
     "CognitoIdentity": {
       "Default": {
-        "PoolId": "eu-west-1:ada5e04b-665a-4b8f-8a3e-6e60b6c86e5d",
+        "PoolId": "eu-west-1:8ea8fba0-ce43-4710-9d13-ff883f8d30c1",
         "Region": "eu-west-1"
       }
     }
