@@ -7,6 +7,9 @@ from app.sensors import Outputter, InputSensor
 
 
 class Alarm:
+    """
+    Class for controlling Alarm Clock Functionailty
+    """
     def __init__(self, alarm_times=None, last_message="", alarm_pin=10, tap_pin=17):
         self.screen = self.__setup_screen()
         self.screen.clear()
@@ -16,6 +19,11 @@ class Alarm:
         self.alarm_tap = InputSensor(tap_pin, "Tap")
 
     def set_message(self, message):
+        """
+        Sets message for display
+        :param message:
+        :return:
+        """
         self.screen.clear()
         self.__message = message
 
@@ -52,6 +60,7 @@ class Alarm:
             if alarm_countdown > 0:
                 if tapped:
                     alarm_countdown = 1
+                    self.snooze_mode()
                 if not started:
                     started = True
                 tapped = False
@@ -61,7 +70,19 @@ class Alarm:
                 print("Alarm OFF")
                 self.alarm_off()
 
+    def snooze_mode(self):
+        """
+        Applies Snooze Functionality
+        :return:
+        """
+        print("Entering Snooze Mode") # TODO add Movement Function
+
+
     def alarm_off(self):
+        """
+        Exposes Alarm off to external program
+        :return:
+        """
         self.alarm_buzzer.off()
 
     @staticmethod

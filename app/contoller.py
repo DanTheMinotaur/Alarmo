@@ -48,6 +48,7 @@ class AlarmoController:
             pass
 
     def override_alarm_message(self, message):
+        """ Function Overrides alarm message """
         self.__alarm.set_message(message)
 
     def __load_configurations(self):
@@ -81,6 +82,7 @@ class AlarmoController:
             raise KeyError("Error in alarm_times.json configuration, no 'times' key")
 
     def listen_for_readings(self):
+        """ Method listens for commands being sent via MQTT AWS"""
         command_topic = "Alarm/Command"
         while True:
             self.aws_client.receive(command_topic)
@@ -89,6 +91,7 @@ class AlarmoController:
 
 
     def __read_command(self, command):
+        """ Reaeds commands and runs actions on valid ones. """
         print("Reading Command")
         if "message" in command:
             self.override_alarm_message(str(command["message"]))
@@ -108,6 +111,7 @@ class AlarmoController:
             sleep(wait_time)
 
     def __read_sensors(self):
+        """ Reads Sensor Data from Sensors and Returns the data. """
         sensor_data = {}
         for sensor in self.active_sensors:
             sensor_data[sensor.sensor_type] = sensor.read()
