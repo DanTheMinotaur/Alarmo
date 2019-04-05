@@ -3,6 +3,7 @@ package online.danshub.alarmo.alarmocomanion;
 import android.app.AlertDialog;
 import android.app.TimePickerDialog;
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
@@ -48,7 +49,7 @@ public class MainActivity extends AWSActivity {
         alarmTimeList.add("21:00");
         alarmTimeList.add("22:00");
     }
-
+    
     /**
      * Creates UI dialogs for setting alarms and removing them
      */
@@ -116,7 +117,11 @@ public class MainActivity extends AWSActivity {
                     public void onClick(DialogInterface dialog, int which) {
                         String inputText = messageInput.getText().toString();
                         Log.v(LOGTAG, inputText);
-                        Toast.makeText(getApplicationContext(), "Message Sent: " + inputText, Toast.LENGTH_LONG).show();
+                        if (inputText.length() > 0) {
+                            publish(buildCommand("message", inputText), commandTopic);
+                        } else {
+                            Toast.makeText(getApplicationContext(), "There was nothing in that message!", Toast.LENGTH_LONG).show();
+                        }
                     }
                 });
                 builder.setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
@@ -128,28 +133,5 @@ public class MainActivity extends AWSActivity {
                 builder.show();
             }
         });
-        Button testButton = findViewById(R.id.testButton);
-        testButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Log.v(LOGTAG, "Test Button Clicked");
-                connectClient();
-            }
-        });
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
     }
 }
