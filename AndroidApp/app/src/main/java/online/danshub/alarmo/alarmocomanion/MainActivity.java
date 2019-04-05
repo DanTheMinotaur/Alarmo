@@ -3,38 +3,32 @@ package online.danshub.alarmo.alarmocomanion;
 import android.app.AlertDialog;
 import android.app.TimePickerDialog;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
-import android.support.v4.app.DialogFragment;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
-import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
-import com.amazonaws.mobile.client.AWSMobileClient;
-import com.amazonaws.mobile.client.Callback;
-import com.amazonaws.mobile.client.UserStateDetails;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 public class MainActivity extends AWSActivity {
+    static final String sensorTopic = "Sensor/Data";
+    static final String commandTopic = "Alarm/Command";
 
-    public List<String> staticListAlarms = new ArrayList<>();
+    public List<String> alarmTimeList = new ArrayList<>();
     private ListView alarmTimesList;
 
     private TimePickerDialog timePickerDialog;
@@ -45,17 +39,33 @@ public class MainActivity extends AWSActivity {
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        initialiseAWS();
 
         createDialogs();
         createButtons();
 
-        staticListAlarms.add("11:00");
-        staticListAlarms.add("21:00");
-        staticListAlarms.add("22:00");
+        alarmTimeList.add("11:00");
+        alarmTimeList.add("21:00");
+        alarmTimeList.add("22:00");
+    }
+
+    /**
+     * Creates UI dialogs for setting alarms and removing them
+     */
+    private void createDialogs() {
+        timePickerDialog = new TimePickerDialog(MainActivity.this, new TimePickerDialog.OnTimeSetListener() {
+            @Override
+            public void onTimeSet(TimePicker timePicker, int hourOfDay, int minutes) {
+                Log.v(LOGTAG, "Hour: " + hourOfDay + " - Minute: " + minutes);
+                String alarmTime = hourOfDay + ":" + minutes;
+                publish(buildCommand("time", alarmTime), commandTopic);
+                alarmTimeList.add(alarmTime);
+            }
+        }, 0, 0,  true);
 
         alarmTimesList = findViewById(R.id.alarmTimesList);
 
-        final ArrayAdapter arrayAdapter = new ArrayAdapter(MainActivity.this, android.R.layout.select_dialog_singlechoice, staticListAlarms);
+        final ArrayAdapter arrayAdapter = new ArrayAdapter(MainActivity.this, android.R.layout.select_dialog_singlechoice, alarmTimeList);
 
         alarmTimesList.setAdapter(arrayAdapter);
 
@@ -68,25 +78,18 @@ public class MainActivity extends AWSActivity {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         Log.v(LOGTAG, "Clicked Alarm Time");
-                        staticListAlarms.remove(position);
+                        alarmTimeList.remove(position);
                         arrayAdapter.notifyDataSetChanged();
                     }
                 });
                 builder.show();
             }
         });
-
     }
 
-    private void createDialogs() {
-        timePickerDialog = new TimePickerDialog(MainActivity.this, new TimePickerDialog.OnTimeSetListener() {
-            @Override
-            public void onTimeSet(TimePicker timePicker, int hourOfDay, int minutes) {
-                Log.v(LOGTAG, "Hour: " + hourOfDay + " - Minute: " + minutes);
-            }
-        }, 0, 0,  true);
-    }
-
+    /**
+     * Creates Listener events for buttons.
+     */
     private void createButtons() {
         FloatingActionButton alarmChooserButton = findViewById(R.id.alarmCreateButton);
         FloatingActionButton sendMessageButton = findViewById(R.id.sendMessageButton);
@@ -125,13 +128,12 @@ public class MainActivity extends AWSActivity {
                 builder.show();
             }
         });
-
         Button testButton = findViewById(R.id.testButton);
-
         testButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                connectAWS();
+                Log.v(LOGTAG, "Test Button Clicked");
+                connectClient();
             }
         });
     }

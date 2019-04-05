@@ -25,43 +25,49 @@ import org.json.JSONObject;
 import java.io.UnsupportedEncodingException;
 import java.nio.charset.StandardCharsets;
 import java.security.KeyStore;
+import java.util.HashMap;
 import java.util.UUID;
 
+/**
+ * Abstact Class for AWSIoT Connection Methods.
+ */
 public abstract class AWSActivity extends AppCompatActivity {
     static final String LOG_TAG = AWSActivity.class.getCanonicalName();
-    static final String dataTopic = "PI/Data";
+
 
     // IoT endpoint
     // AWS Iot CLI describe-endpoint call returns: XXXXXXXXXX.iot.<region>.amazonaws.com
-    private static final String CUSTOMER_SPECIFIC_ENDPOINT = "a3p8hueujw0tur-ats.iot.eu-west-1.amazonaws.com";
+    protected static final String CUSTOMER_SPECIFIC_ENDPOINT = "a3p8hueujw0tur-ats.iot.eu-west-1.amazonaws.com";
     // Name of the AWS IoT policy to attach to a newly created certificate
-    private static final String AWS_IOT_POLICY_NAME = "AlarmoAndroidPolicy";
+    protected static final String AWS_IOT_POLICY_NAME = "AlarmoAndroidPolicy";
 
     // Region of AWS IoT
-    private static final Regions MY_REGION = Regions.EU_WEST_1;
+    protected static final Regions MY_REGION = Regions.EU_WEST_1;
     // Filename of KeyStore file on the filesystem
-    private static final String KEYSTORE_NAME = "alarmo_keystore";
+    protected static final String KEYSTORE_NAME = "alarmo_keystore";
     // Password for the private key in the KeyStore
-    private static final String KEYSTORE_PASSWORD = "Hello123";
+    protected static final String KEYSTORE_PASSWORD = "Hello123";
     // Certificate and key aliases in the KeyStore
-    private static final String CERTIFICATE_ID = "default";
+    protected static final String CERTIFICATE_ID = "default";
 
-    AWSIotClient mIotAndroidClient;
-    AWSIotMqttManager mqttManager;
-    String clientId;
-    String keystorePath;
-    String keystoreName;
-    String keystorePassword;
-    KeyStore clientKeyStore = null;
-    String certificateId;
+    protected AWSIotClient mIotAndroidClient;
+    protected AWSIotMqttManager mqttManager;
+    protected String clientId;
+    protected String keystorePath;
+    protected String keystoreName;
+    protected String keystorePassword;
+    protected KeyStore clientKeyStore = null;
+    protected String certificateId;
+    protected Boolean connectedToBroker = false;
 
-    public void connectAWS() {
+    public void initialiseAWS() {
         clientId = UUID.randomUUID().toString();
 
         AWSMobileClient.getInstance().initialize(this, new Callback<UserStateDetails>() {
             @Override
             public void onResult(UserStateDetails result) {
                 initIoTClient();
+
             }
 
             @Override
@@ -71,9 +77,27 @@ public abstract class AWSActivity extends AppCompatActivity {
         });
     }
 
+    public JSONObject buildCommand(String command, String value) {
+        try {
+            return new JSONObject().put("command", new JSONObject().put(command, value));
+        } catch (Exception e) {
+            Log.e(LOG_TAG, e.toString());
+            return null;
+        }
+    }
 
+    /**
+     * Message Checks if the MQTTT Broker is connected and waits until it has been connected.
+     */
+    private void checkConnection() {
+        if (!connectedToBroker) {
+            connectClient();
+            while(!connectedToBroker) {}
+        }
+    }
 
     public void publish(JSONObject data, String topic) {
+        checkConnection();
         try {
             mqttManager.publishString(data.toString(), topic, AWSIotMqttQos.QOS0);
             Log.v(LOG_TAG, "Publish " + data + " to AWS");
@@ -83,6 +107,7 @@ public abstract class AWSActivity extends AppCompatActivity {
     }
 
     public void subscribe(String topic) {
+        checkConnection();
 
         Log.d(LOG_TAG, "topic = " + topic);
 
@@ -144,7 +169,7 @@ public abstract class AWSActivity extends AppCompatActivity {
                     Log.d(LOG_TAG, "Status = " + statusConnect);
 
                     if (statusConnect.equals("Connected")) {
-                        subscribe(dataTopic);
+                        connectedToBroker = true;
                     }
 
                     runOnUiThread(new Runnable() {
