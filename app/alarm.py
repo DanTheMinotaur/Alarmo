@@ -14,7 +14,7 @@ class Alarm:
         self.screen = self.__setup_screen()
         self.screen.clear()
         self.__message = last_message
-        self.alarm_times = sorted(list(alarm_times), reverse=True)
+        self.alarm_times = list(alarm_times)
         self.alarm_buzzer = Outputter(alarm_pin)
         self.alarm_tap = InputSensor(tap_pin, "Tap")
 
@@ -25,18 +25,26 @@ class Alarm:
         :return:
         """
         self.screen.clear()
-        self.__message = message
+        self.__message = str(message)
 
     def display(self):
-        """
+        """[0]
         Displays the current time and message set.
         :return: None
         """
-        self.set_message("Alarm @ {}".format(self.alarm_times[0]))
         alarm_countdown = 0
         started = False
         tapped = False
+        loop_count = 0
         while True:
+            print(self.alarm_times)
+            if len(self.alarm_times) > 0 and loop_count % 10 == 0:
+                next_time = sorted(self.alarm_times, reverse=True)[0]
+                self.set_message("Alarm @ {}".format(next_time))
+
+            if loop_count % 20:
+                self.set_message(self.__message)
+
             current_time = datetime.now().strftime("%b-%d %H:%M")
 
             if started:
@@ -64,11 +72,11 @@ class Alarm:
                 if not started:
                     started = True
                 tapped = False
-                print("Lowering Countdown")
                 alarm_countdown -= 1
             else:
-                print("Alarm OFF")
                 self.alarm_off()
+
+            loop_count += 1
 
     def snooze_mode(self):
         """

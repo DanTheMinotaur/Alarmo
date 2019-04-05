@@ -4,7 +4,7 @@ from app.alarm import Alarm
 from app.connect import AWSClient
 import json
 from threading import Thread, ThreadError
-from time import sleep
+from time import sleep, time
 
 
 class AlarmoController:
@@ -42,7 +42,7 @@ class AlarmoController:
 
         sensor_data_thread = Thread(target=self.publish_sensor_readings)
         sensor_data_thread.setDaemon(True)
-        #sensor_data_thread.start()
+        sensor_data_thread.start()
 
         while True:
             pass
@@ -89,25 +89,33 @@ class AlarmoController:
             if self.aws_client.new_message:
                 self.__read_command(self.aws_client.get_message())
 
-
     def __read_command(self, command):
         """ Reaeds commands and runs actions on valid ones. """
         print("Reading Command")
         if "message" in command:
             self.override_alarm_message(str(command["message"]))
         if "time" in command:
-            #self.alarm_times.append(command["time"])
             self.__alarm.alarm_times.append(command["time"])
+        if "time_delete" in command:
+            try:
+                self.__alarm.alarm_times.remove(command["time_delete"])
+            except ValueError:
+                print("Cannot find alarm time")
         print(command)
 
-    def publish_sensor_readings(self, wait_time=1):
+    def publish_sensor_readings(self, wait_time=10):
         """
-        Sends sensor readings to AWS
+        Sends sensor readings to AWS Sensor/Data
         :param wait_time: time to wait before reading sensors again.
         :return:
         """
+        topic = "sdk/test/Python"
         while True:
-            print(self.__read_sensors())
+            readings = self.__read_sensors()
+            for data_type, data in readings.items():
+                data["time"] = time()
+                data.pop("pin")
+                self.aws_client.send(data, topic)
             sleep(wait_time)
 
     def __read_sensors(self):

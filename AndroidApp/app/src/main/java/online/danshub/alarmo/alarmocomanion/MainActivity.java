@@ -45,10 +45,6 @@ public class MainActivity extends AWSActivity {
 
         createDialogs();
         createButtons();
-
-        alarmTimeList.add("11:00");
-        alarmTimeList.add("21:00");
-        alarmTimeList.add("22:00");
     }
 
     /**
@@ -87,6 +83,7 @@ public class MainActivity extends AWSActivity {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         Log.v(LOGTAG, "Clicked Alarm Time");
+                        publish(buildCommand("time_delete", alarmTimeList.get(position)), commandTopic);
                         alarmTimeList.remove(position);
                         arrayAdapter.notifyDataSetChanged();
                     }
