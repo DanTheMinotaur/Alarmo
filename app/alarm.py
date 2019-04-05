@@ -3,16 +3,17 @@ import board
 import digitalio
 import adafruit_character_lcd.character_lcd as characterlcd
 from datetime import datetime
-from app.sensors import Outputter
+from app.sensors import Outputter, InputSensor
 
 
 class Alarm:
-    def __init__(self, alarm_times=None, last_message="", alarm_pin=10):
+    def __init__(self, alarm_times=None, last_message="", alarm_pin=10, tap_pin=17):
         self.screen = self.__setup_screen()
         self.screen.clear()
         self.__message = last_message
         self.alarm_times = sorted(list(alarm_times), reverse=True)
         self.alarm_buzzer = Outputter(alarm_pin)
+        self.alarm_tap = InputSensor(tap_pin, "Tap")
 
     def set_message(self, message):
         self.screen.clear()
@@ -21,20 +22,25 @@ class Alarm:
     def display(self):
         """
         Displays the current time and message set.
-        :return:
+        :return: None
         """
         self.set_message("Alarm @ {}".format(self.alarm_times[0]))
         alarm_countdown = 0
         started = False
+        tapped = False
         while True:
             current_time = datetime.now().strftime("%b-%d %H:%M")
+
+            if started:
+                tapped = self.alarm_tap.read()
+                print("Tapped: " + str(tapped))
 
             for time in self.alarm_times:
                 if time in current_time:
                     self.set_message("WAKE UP!")
                     #self.alarm_buzzer.on()
                     if not started:
-                        alarm_countdown = 10
+                        alarm_countdown = 30
 
             self.screen.message = "{time}\n{message}".format(
                 time=current_time,
@@ -42,9 +48,13 @@ class Alarm:
             )
             sleep(1)
             print(alarm_countdown)
+
             if alarm_countdown > 0:
+                if tapped:
+                    alarm_countdown = 1
                 if not started:
                     started = True
+                tapped = False
                 print("Lowering Countdown")
                 alarm_countdown -= 1
             else:
