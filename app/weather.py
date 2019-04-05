@@ -8,7 +8,7 @@ class OpenWeather:
     def get_weather_by_city(self, city):
         return requests.get(self.base_url + "&q={}".format(city)).json()
 
-
-test = OpenWeather("9c5881376dd9a6d8655bdb7467a25770")
-
-print(test.get_weather_by_city("Dublin"))
+#
+# test = OpenWeather("9c5881376dd9a6d8655bdb7467a25770")
+#
+# print(test.get_weather_by_city("Dublin"))
