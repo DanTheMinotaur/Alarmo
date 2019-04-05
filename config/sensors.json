@@ -1,4 +1,9 @@
 {
+  "weather": {
+      "location": "Dublin",
+      "key": "9c5881376dd9a6d8655bdb7467a25770",
+      "recheck": 20
+  },
   "screen": {
 
   },

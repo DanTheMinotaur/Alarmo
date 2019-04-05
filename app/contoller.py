@@ -1,4 +1,5 @@
 from app.sensors import TemperatureHumiditySensor, InputSensor
+from app.weather import OpenWeather
 from app.alarm import Alarm
 import json
 from threading import Thread, ThreadError
@@ -12,8 +13,10 @@ class AlarmoController:
     def __init__(self):
         self.active_sensors = list()
         self.alarm_times = list()
+        self.weather_connection = {}
         self.__load_configurations()
         self.__alarm = Alarm(self.alarm_times)
+
 
     def run(self):
         """
@@ -48,6 +51,10 @@ class AlarmoController:
                 self.active_sensors.append(self.__create_sensor(sensor))
         else:
             raise KeyError("Error in sensors.json configuration, no 'sensors' key")
+
+        if self.__validate_config(sensor_config, "weather"):
+            self.weather_connection["connection"] = OpenWeather(sensor_config["weather"]["key"])
+            self.weather_connection["location"] = OpenWeather(sensor_config["weather"]["location"])
 
         with open("./config/alarm_times.json") as alarm_times_json:
             alarm_config = json.load(alarm_times_json)

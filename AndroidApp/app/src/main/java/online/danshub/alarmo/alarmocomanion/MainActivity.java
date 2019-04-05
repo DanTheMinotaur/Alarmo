@@ -49,7 +49,7 @@ public class MainActivity extends AWSActivity {
         alarmTimeList.add("21:00");
         alarmTimeList.add("22:00");
     }
-    
+
     /**
      * Creates UI dialogs for setting alarms and removing them
      */
