@@ -31,6 +31,7 @@ public class MainActivity extends AWSActivity {
 
     public List<String> alarmTimeList = new ArrayList<>();
     private ListView alarmTimesList;
+    private ArrayAdapter arrayAdapter;
 
     private TimePickerDialog timePickerDialog;
     private final String LOGTAG = MainActivity.class.getCanonicalName();;
@@ -58,15 +59,22 @@ public class MainActivity extends AWSActivity {
             @Override
             public void onTimeSet(TimePicker timePicker, int hourOfDay, int minutes) {
                 Log.v(LOGTAG, "Hour: " + hourOfDay + " - Minute: " + minutes);
-                String alarmTime = hourOfDay + ":" + minutes;
+                String minutesString;
+                if (minutes < 10) {
+                    minutesString = "0" + minutes;
+                } else {
+                    minutesString = Integer.toString(minutes);
+                }
+                String alarmTime = hourOfDay + ":" + minutesString;
                 publish(buildCommand("time", alarmTime), commandTopic);
                 alarmTimeList.add(alarmTime);
+                arrayAdapter.notifyDataSetChanged();
             }
         }, 0, 0,  true);
 
         alarmTimesList = findViewById(R.id.alarmTimesList);
 
-        final ArrayAdapter arrayAdapter = new ArrayAdapter(MainActivity.this, android.R.layout.select_dialog_singlechoice, alarmTimeList);
+        arrayAdapter = new ArrayAdapter(MainActivity.this, android.R.layout.select_dialog_singlechoice, alarmTimeList);
 
         alarmTimesList.setAdapter(arrayAdapter);
 

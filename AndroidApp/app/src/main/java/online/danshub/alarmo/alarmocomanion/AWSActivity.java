@@ -79,7 +79,7 @@ public abstract class AWSActivity extends AppCompatActivity {
 
     public JSONObject buildCommand(String command, String value) {
         try {
-            return new JSONObject().put("command", new JSONObject().put(command, value));
+            return new JSONObject().put(command, value);
         } catch (Exception e) {
             Log.e(LOG_TAG, e.toString());
             return null;

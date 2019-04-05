@@ -1,5 +1,8 @@
 from app.contoller import AlarmoController
 
 alarm = AlarmoController()
-
-alarm.run()
+try:
+    alarm.run()
+except KeyboardInterrupt:
+    print("Closing Program")
+    exit()

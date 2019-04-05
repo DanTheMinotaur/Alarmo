@@ -42,7 +42,7 @@ class AlarmoController:
 
         sensor_data_thread = Thread(target=self.publish_sensor_readings)
         sensor_data_thread.setDaemon(True)
-        sensor_data_thread.start()
+        #sensor_data_thread.start()
 
         while True:
             pass
@@ -65,7 +65,8 @@ class AlarmoController:
         else:
             raise KeyError("Error in sensors.json configuration, no 'sensors' key")
 
-        if self.__validate_config(sensor_config, "weather"):
+        if "weather" in sensor_config:
+            print("IN WEATHER")
             self.weather_connection["connection"] = OpenWeather(sensor_config["weather"]["key"])
             self.weather_connection["location"] = OpenWeather(sensor_config["weather"]["location"])
 
@@ -90,9 +91,10 @@ class AlarmoController:
     def __read_command(self, command):
         print("Reading Command")
         if "message" in command:
-            self.override_alarm_message(command["message"])
+            self.override_alarm_message(str(command["message"]))
         if "time" in command:
-            self.alarm_times.append(command["time"])
+            #self.alarm_times.append(command["time"])
+            self.__alarm.alarm_times.append(command["time"])
         print(command)
 
     def publish_sensor_readings(self, wait_time=1):
