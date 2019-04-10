@@ -7,6 +7,8 @@ normal alarm clock but when not in use transmit sensor data regarding the room
 the alarm is in and store it in an offsite database.
 
 ![Alarmo Picture](https://github.com/DanTheMinotaur/Alarmo/blob/fca78d1d51100c9fedd71aa2bf4e692209114859/Alarmo.jpg?raw=true)
+![Alarmo Sensors](https://github.com/DanTheMinotaur/Alarmo/blob/fca78d1d51100c9fedd71aa2bf4e692209114859/Sensors.png?raw=true)
+![Alarmo Sensors](https://github.com/DanTheMinotaur/Alarmo/blob/fca78d1d51100c9fedd71aa2bf4e692209114859/Sensors2.png?raw=true)
 
 Features
 ========
